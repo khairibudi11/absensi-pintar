@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <base target="_top">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sistem Sekolah Pintar</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+    <style>
+      :root {
+        --primary: #6366f1;
+        --primary-glow: rgba(99, 102, 241, 0.4);
+        --glass-bg: rgba(255, 255, 255, 0.85); /* Lebih solid supaya teks jelas di HP */
+        --glass-border: rgba(255, 255, 255, 0.9);
+        --text-dark: #1e293b;
+        --text-grey: #64748b;
+        --radius: 20px;
+      }
+
+      body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background: linear-gradient(135deg, #f5f3ff 0%, #eff6ff 100%);
+        margin: 0; padding: 0;
+        min-height: 100vh;
+        color: var(--text-dark);
+        display: flex; flex-direction: column;
+        /* Mencegah scroll samping di HP */
+        overflow-x: hidden; 
+      }
+
+      /* Dekorasi Background */
+      .blob {
+        position: fixed; width: 300px; height: 300px;
+        background: var(--primary); filter: blur(100px); opacity: 0.15;
+        border-radius: 50%; z-index: -1; pointer-events: none;
+      }
+      .blob-1 { top: -100px; left: -100px; }
+      .blob-2 { bottom: -100px; right: -100px; background: #ec4899; }
+
+      /* --- NAVBAR --- */
+      .navbar {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        padding: 16px 20px;
+        display: flex; justify-content: space-between; align-items: center;
+        box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+        position: sticky; top: 0; z-index: 100; /* Sticky di atas */
+      }
+      .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 16px; }
+      .brand-icon { width: 32px; height: 32px; background: var(--primary); color: white; border-radius: 50%; display: grid; place-items: center; }
+      .jam-pill { background: #f1f5f9; padding: 6px 12px; border-radius: 20px; font-weight: 600; font-size: 13px; }
+
+      /* --- CONTAINER UTAMA (Mobile First) --- */
+      .container {
+        padding: 20px;
+        display: flex; 
+        flex-direction: column; /* Default: Menumpuk ke bawah (HP) */
+        gap: 20px;
+        width: 100%; 
+        box-sizing: border-box;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .card {
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius);
+        padding: 20px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+      }
+
+      /* --- KAMERA --- */
+      .camera-box {
+        position: relative; background: #000;
+        border-radius: 16px; overflow: hidden;
+        aspect-ratio: 1/1; /* Kotak persegi di HP biar pas */
+        display: flex; align-items: center; justify-content: center;
+      }
+      #reader { width: 100%; height: 100%; object-fit: cover; }
+      .cam-overlay {
+        position: absolute; top:0; left:0; width:100%; height:100%;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        background: rgba(20, 20, 30, 0.85); z-index: 2; text-align: center; color: white;
+      }
+      .btn-cam {
+        background: white; color: black; border: none; padding: 12px 24px;
+        border-radius: 50px; font-weight: 700; cursor: pointer;
+        display: flex; align-items: center; gap: 8px; margin-top: 15px;
+        box-shadow: 0 4px 15px rgba(255,255,255,0.2);
+      }
+      .btn-cam.stop { background: #ef4444; color: white; position: absolute; bottom: 15px; z-index: 10; display: none; }
+
+      /* --- INPUT ID --- */
+      .input-wrapper { position: relative; margin-top: 20px; }
+      .input-fancy {
+        width: 100%; padding: 14px 14px 14px 44px;
+        border: 2px solid #e2e8f0; border-radius: 14px;
+        font-size: 16px; font-weight: 600; outline: none; box-sizing: border-box;
+      }
+      .input-fancy:focus { border-color: var(--primary); }
+      .input-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-grey); font-size: 20px; }
+
+      /* --- SWITCHER TABS --- */
+      .switch-box {
+        background: #f1f5f9; padding: 5px; border-radius: 14px; display: flex; margin-bottom: 20px;
+      }
+      .switch-btn {
+        flex: 1; padding: 10px; border: none; background: transparent;
+        border-radius: 10px; font-weight: 600; font-size: 14px; color: var(--text-grey);
+        transition: 0.2s;
+      }
+      .switch-btn.active { background: white; color: var(--text-dark); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+
+      /* --- TOMBOL ABSEN (Grid Besar untuk Jari) --- */
+      .grid-absen { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+      .absen-btn {
+        border: none; padding: 16px; border-radius: 16px;
+        display: flex; flex-direction: column; align-items: center; gap: 6px;
+        cursor: pointer; position: relative;
+      }
+      .absen-btn:active { transform: scale(0.96); }
+      .absen-btn h3 { margin: 0; font-size: 14px; font-weight: 800; }
+      .absen-btn i { font-size: 24px; }
+      
+      .btn-hadir { background: #dcfce7; color: #166534; }
+      .btn-sakit { background: #fef3c7; color: #b45309; }
+      .btn-izin  { background: #dbeafe; color: #1e40af; }
+      .btn-alpha { background: #fee2e2; color: #991b1b; }
+
+      .btn-save {
+        background: var(--text-dark); color: white; width: 100%;
+        padding: 16px; border: none; border-radius: 14px;
+        font-weight: 700; font-size: 16px; margin-top: 15px;
+      }
+
+      /* --- DESKTOP VIEW (Media Query) --- */
+      /* CSS di dalam sini HANYA berlaku jika layar lebih lebar dari 960px (Laptop/PC) */
+      @media (min-width: 960px) {
+        .container {
+          display: grid; 
+          grid-template-columns: 400px 1fr; /* Kiri 400px, Kanan sisanya */
+          align-items: start;
+        }
+        .navbar { margin: 20px 24px; border-radius: 100px; padding: 12px 24px; top: 20px; }
+        .camera-box { aspect-ratio: 4/3; } /* Di laptop agak persegi panjang */
+      }
+    </style>
+  </head>
+  <body>
+
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <nav class="navbar">
+      <div class="brand">
+        <div class="brand-icon"><i class="ri-school-fill"></i></div>
+        SDNRantauBujur
+      </div>
+      <div class="jam-pill" id="jam">--:--</div>
+    </nav>
+
+    <div class="container">
+      
+      <div class="card">
+        <div class="camera-box">
+          <div id="reader" style="display:none;"></div>
+          <div class="cam-overlay" id="camOverlay">
+            <i class="ri-camera-lens-line" style="font-size:48px; opacity:0.5; margin-bottom:10px;"></i>
+            <span style="font-size:14px; opacity:0.8;">Mode Standby</span>
+            <button class="btn-cam" onclick="toggleCamera()" type="button">
+              <i class="ri-play-fill"></i> Buka Kamera
+            </button>
+          </div>
+          <button id="btnStop" class="btn-cam stop" onclick="toggleCamera()" type="button">
+            <i class="ri-stop-circle-fill"></i> Stop
+          </button>
+        </div>
+
+        <div class="input-wrapper">
+          <i class="ri-qr-scan-2-line input-icon"></i>
+          <input type="text" id="idSiswa" class="input-fancy" placeholder="Scan QR / Ketik ID">
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="switch-box">
+          <button class="switch-btn active" onclick="gantiTab('absen')" id="btnTabAbsen">Presensi</button>
+          <button class="switch-btn" onclick="gantiTab('nilai')" id="btnTabNilai">Penilaian</button>
+        </div>
+
+        <div id="panelAbsen">
+          <div class="grid-absen">
+            <button class="absen-btn btn-hadir" onclick="prosesAbsen('Hadir')">
+              <i class="ri-checkbox-circle-fill"></i> <h3>HADIR</h3>
+            </button>
+            <button class="absen-btn btn-sakit" onclick="prosesAbsen('Sakit')">
+              <i class="ri-hospital-fill"></i> <h3>SAKIT</h3>
+            </button>
+            <button class="absen-btn btn-izin" onclick="prosesAbsen('Izin')">
+              <i class="ri-mail-send-fill"></i> <h3>IZIN</h3>
+            </button>
+            <button class="absen-btn btn-alpha" onclick="prosesAbsen('Alpha')">
+              <i class="ri-close-circle-fill"></i> <h3>ALPHA</h3>
+            </button>
+          </div>
+        </div>
+
+        <div id="panelNilai" style="display:none;">
+           <div style="display:flex; flex-direction:column; gap:15px;">
+              <div>
+                <label style="font-size:12px; font-weight:700; color:var(--text-grey); margin-bottom:5px; display:block;">MATA PELAJARAN</label>
+                <input type="text" id="mapel" class="input-fancy" placeholder="Matematika" style="padding:12px;">
+              </div>
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+                <div>
+                  <label style="font-size:12px; font-weight:700; color:var(--text-grey); margin-bottom:5px; display:block;">NILAI</label>
+                  <input type="number" id="nilai" class="input-fancy" placeholder="0-100" style="padding:12px;">
+                </div>
+                <div>
+                  <label style="font-size:12px; font-weight:700; color:var(--text-grey); margin-bottom:5px; display:block;">KET.</label>
+                  <input type="text" id="ket" class="input-fancy" placeholder="Tuntas" style="padding:12px;">
+                </div>
+              </div>
+              <button class="btn-save" onclick="prosesNilai()">
+                <i class="ri-save-3-line"></i> Simpan Data
+              </button>
+           </div>
+        </div>
+      </div>
+
+    </div>
+
+    <script>
+      setInterval(() => { document.getElementById('jam').innerText = new Date().toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'}); }, 1000);
+
+      function gantiTab(tab) {
+        document.getElementById('btnTabAbsen').className = tab === 'absen' ? 'switch-btn active' : 'switch-btn';
+        document.getElementById('btnTabNilai').className = tab === 'nilai' ? 'switch-btn active' : 'switch-btn';
+        document.getElementById('panelAbsen').style.display = tab === 'absen' ? 'block' : 'none';
+        document.getElementById('panelNilai').style.display = tab === 'nilai' ? 'block' : 'none';
+      }
+
+      let scanner = null;
+      let isCamOn = false;
+
+      function toggleCamera() {
+        const btnStop = document.getElementById('btnStop');
+        const overlay = document.getElementById('camOverlay');
+        const reader = document.getElementById('reader');
+
+        if (!isCamOn) {
+          reader.style.display = 'block';
+          overlay.style.display = 'none';
+          btnStop.style.display = 'flex';
+          
+          scanner = new Html5Qrcode("reader");
+          scanner.start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 250, height: 250 } }, 
+            (decoded) => {
+              new Audio('https://media.geeksforgeeks.org/wp-content/uploads/20190531135120/beep.mp3').play();
+              document.getElementById('idSiswa').value = decoded;
+              toggleCamera(); // Matikan setelah scan
+              Swal.fire({ toast: true, position: 'top', icon: 'success', title: 'Scan: ' + decoded, showConfirmButton: false, timer: 1500 });
+            })
+            .catch(err => { Swal.fire('Error', 'Izin kamera diperlukan', 'error'); toggleCamera(); });
+          
+          isCamOn = true;
+        } else {
+          if(scanner) scanner.stop().then(() => scanner.clear());
+          reader.style.display = 'none';
+          overlay.style.display = 'flex';
+          btnStop.style.display = 'none';
+          isCamOn = false;
+        }
+      }
+
+      function prosesAbsen(status) {
+        kirimData('absen', status);
+      }
+      function prosesNilai() {
+        kirimData('nilai');
+      }
+
+      function kirimData(tipe, statusAbsen = '') {
+        const id = document.getElementById('idSiswa').value;
+        if(!id) return Swal.fire('ID Kosong', 'Scan atau ketik ID Siswa', 'warning');
+
+        // MASUKKAN URL DEPLOYMENT GOOGLE APPS SCRIPT ANDA DI SINI
+        const URL_GOOGLE_SCRIPT = "https://script.google.com/macros/s/AKfycbyZVyv5Kppy2Iu-mRbjzYoaLiGzuVVu5qtkOqHAhXx_qpZEItyHRBam6-cKsbdXcgq0/exec";
+
+        let payload = {};
+        if(tipe === 'absen') {
+           payload = { tipe: 'absen', id: id, status: statusAbsen };
+        } else {
+           const mp = document.getElementById('mapel').value;
+           const nl = document.getElementById('nilai').value;
+           const kt = document.getElementById('ket').value || '-';
+           if(!mp || !nl) return Swal.fire('Lengkapi Data', 'Mapel & Nilai wajib diisi', 'warning');
+           payload = { tipe: 'nilai', id: id, mapel: mp, ket: kt, nilai: nl };
+        }
+
+        Swal.fire({title: 'Menyimpan...', didOpen: () => Swal.showLoading()});
+        
+        // Mengirim data ke Google Script
+        fetch(URL_GOOGLE_SCRIPT, {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        })
+        .then(response => response.json())
+        .then(res => {
+          Swal.close();
+          if(res.status === 'success') {
+             Swal.fire({icon: 'success', title: 'Berhasil', text: res.pesan || 'Data tersimpan', timer: 1500, showConfirmButton: false});
+             if(document.getElementById('panelNilai').style.display !== 'none') {
+               document.getElementById('nilai').value = ''; 
+               document.getElementById('ket').value = '';
+             } else {
+               document.getElementById('idSiswa').value = '';
+             }
+          } else {
+             Swal.fire('Gagal', res.pesan, 'error');
+          }
+        })
+        .catch(err => { 
+          Swal.close();
+          Swal.fire('Error', 'Gagal koneksi ke server', 'error'); 
+        });
+      }
+    </script>
+  </body>
+</html>
