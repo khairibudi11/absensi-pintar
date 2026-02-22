@@ -6,7 +6,6 @@
     <title>Sistem Sekolah Pintar</title>
     
     <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/167/167707.png" type="image/png">
-
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -55,11 +54,11 @@
       .brand-icon { width: 32px; height: 32px; background: var(--primary); color: white; border-radius: 50%; display: grid; place-items: center; }
       .jam-pill { background: #f1f5f9; padding: 6px 12px; border-radius: 20px; font-weight: 600; font-size: 13px; }
 
-      /* --- CONTAINER UTAMA --- */
+      /* --- CONTAINER UTAMA (Mobile First) --- */
       .container {
         padding: 20px;
         display: flex; 
-        flex-direction: column; 
+        flex-direction: column; /* Default HP: Susun ke bawah */
         gap: 20px;
         width: 100%; 
         box-sizing: border-box;
@@ -75,14 +74,14 @@
         box-shadow: 0 4px 20px rgba(0,0,0,0.03);
       }
       
-      /* --- KAMERA AREA (DIPERBAIKI) --- */
+      /* --- KAMERA AREA --- */
       .camera-box {
         position: relative;
         background: #000;
-        border-radius: var(--radius); /* Perbaikan variabel */
+        border-radius: var(--radius);
         overflow: hidden;
         width: 100%;
-        min-height: 350px; /* Paksa tinggi minimum di HP agar tidak gepeng */
+        min-height: 300px; /* Pas di HP */
         display: flex; align-items: center; justify-content: center;
       }
 
@@ -129,6 +128,7 @@
         border: none; padding: 16px; border-radius: 16px;
         display: flex; flex-direction: column; align-items: center; gap: 6px;
         cursor: pointer; position: relative;
+        transition: transform 0.1s;
       }
       .absen-btn:active { transform: scale(0.96); }
       .absen-btn h3 { margin: 0; font-size: 14px; font-weight: 800; }
@@ -145,11 +145,41 @@
         font-weight: 700; font-size: 16px; margin-top: 15px;
       }
 
-      /* --- DESKTOP LAYOUT (DIPERBAIKI) --- */
+      /* =========================================
+         DESKTOP LAYOUT (PERBAIKAN KUNCI DI SINI) 
+         ========================================= */
       @media (min-width: 900px) {
-        .container { grid-template-columns: 400px 1fr; align-items: start; }
-        .navbar { margin: 20px 24px; border-radius: 100px; padding: 12px 24px; top: 20px; }
-        .camera-box { min-height: 300px; } 
+        .container { 
+          display: grid; /* MENGUBAH FLEX MENJADI GRID (Bersebelahan) */
+          grid-template-columns: 1fr 1.2fr; /* Membagi dua layar: Kiri 1 bagian (Kamera), Kanan 1.2 bagian (Menu) */
+          align-items: start; 
+          gap: 30px; /* Jarak antar kotak lebih lega */
+          padding: 30px 20px;
+        }
+        
+        .navbar { 
+          margin: 20px auto; 
+          border-radius: 100px; 
+          padding: 15px 30px; 
+          max-width: 1160px; /* Lebar maksimal navbar di desktop */
+          top: 20px;
+        }
+
+        .camera-box { 
+          min-height: 400px; /* Kotak kamera otomatis meninggi proporsional di Desktop */
+        } 
+
+        .grid-absen { 
+          gap: 20px; /* Jarak antar tombol absen lebih lebar */
+        }
+
+        .absen-btn {
+          padding: 24px 16px; /* Tombol absen lebih besar dan empuk di klik pakai mouse */
+        }
+
+        .absen-btn i {
+          font-size: 32px; /* Ikon diperbesar di Desktop */
+        }
       }
     </style>
   </head>
@@ -179,7 +209,7 @@
             </button>
           </div>
           <button id="btnStop" class="btn-cam stop" onclick="toggleCamera()" type="button">
-            <i class="ri-stop-circle-fill"></i> Stop
+            <i class="ri-stop-circle-fill"></i> Matikan Kamera
           </button>
         </div>
 
@@ -191,8 +221,8 @@
 
       <div class="card">
         <div class="switch-box">
-          <button class="switch-btn active" onclick="gantiTab('absen')" id="btnTabAbsen">Presensi</button>
-          <button class="switch-btn" onclick="gantiTab('nilai')" id="btnTabNilai">Penilaian</button>
+          <button class="switch-btn active" onclick="gantiTab('absen')" id="btnTabAbsen">Presensi Harian</button>
+          <button class="switch-btn" onclick="gantiTab('nilai')" id="btnTabNilai">Input Penilaian</button>
         </div>
 
         <div id="panelAbsen">
@@ -216,7 +246,7 @@
            <div style="display:flex; flex-direction:column; gap:15px;">
              <div>
                <label style="font-size:12px; font-weight:700; color:var(--text-grey); margin-bottom:5px; display:block;">MATA PELAJARAN</label>
-               <input type="text" id="mapel" class="input-fancy" placeholder="Matematika" style="padding:12px;">
+               <input type="text" id="mapel" class="input-fancy" placeholder="Contoh: Matematika" style="padding:12px;">
              </div>
              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
                <div>
@@ -224,8 +254,8 @@
                  <input type="number" id="nilai" class="input-fancy" placeholder="0-100" style="padding:12px;">
                </div>
                <div>
-                 <label style="font-size:12px; font-weight:700; color:var(--text-grey); margin-bottom:5px; display:block;">KET.</label>
-                 <input type="text" id="ket" class="input-fancy" placeholder="Tuntas" style="padding:12px;">
+                 <label style="font-size:12px; font-weight:700; color:var(--text-grey); margin-bottom:5px; display:block;">KETERANGAN</label>
+                 <input type="text" id="ket" class="input-fancy" placeholder="Contoh: Tuntas" style="padding:12px;">
                </div>
              </div>
              <button class="btn-save" onclick="prosesNilai()">
@@ -266,9 +296,9 @@
               new Audio('https://media.geeksforgeeks.org/wp-content/uploads/20190531135120/beep.mp3').play();
               document.getElementById('idSiswa').value = decoded;
               toggleCamera(); // Matikan setelah scan
-              Swal.fire({ toast: true, position: 'top', icon: 'success', title: 'Scan: ' + decoded, showConfirmButton: false, timer: 1500 });
+              Swal.fire({ toast: true, position: 'top', icon: 'success', title: 'Scan Berhasil: ' + decoded, showConfirmButton: false, timer: 1500 });
             })
-            .catch(err => { Swal.fire('Error', 'Izin kamera diperlukan', 'error'); toggleCamera(); });
+            .catch(err => { Swal.fire('Error', 'Izin kamera diperlukan atau kamera tidak tersedia', 'error'); toggleCamera(); });
           
           isCamOn = true;
         } else {
@@ -289,7 +319,7 @@
 
       function kirimData(tipe, statusAbsen = '') {
         const id = document.getElementById('idSiswa').value;
-        if(!id) return Swal.fire('ID Kosong', 'Scan atau ketik ID Siswa', 'warning');
+        if(!id) return Swal.fire('ID Kosong', 'Scan QR atau ketik ID Siswa terlebih dahulu', 'warning');
 
         // URL Google Script Anda
         const URL_GOOGLE_SCRIPT = "https://script.google.com/macros/s/AKfycbyZVyv5Kppy2Iu-mRbjzYoaLiGzuVVu5qtkOqHAhXx_qpZEItyHRBam6-cKsbdXcgq0/exec";
@@ -301,11 +331,11 @@
            const mp = document.getElementById('mapel').value;
            const nl = document.getElementById('nilai').value;
            const kt = document.getElementById('ket').value || '-';
-           if(!mp || !nl) return Swal.fire('Lengkapi Data', 'Mapel & Nilai wajib diisi', 'warning');
+           if(!mp || !nl) return Swal.fire('Lengkapi Data', 'Mata Pelajaran dan Nilai wajib diisi', 'warning');
            payload = { tipe: 'nilai', id: id, mapel: mp, ket: kt, nilai: nl };
         }
 
-        Swal.fire({title: 'Menyimpan...', didOpen: () => Swal.showLoading()});
+        Swal.fire({title: 'Menyimpan Data...', allowOutsideClick: false, didOpen: () => Swal.showLoading()});
         
         // Mengirim data ke Google Script
         fetch(URL_GOOGLE_SCRIPT, {
@@ -316,7 +346,7 @@
         .then(res => {
           Swal.close();
           if(res.status === 'success') {
-             Swal.fire({icon: 'success', title: 'Berhasil', text: res.pesan || 'Data tersimpan', timer: 1500, showConfirmButton: false});
+             Swal.fire({icon: 'success', title: 'Berhasil!', text: res.pesan || 'Data telah tersimpan', timer: 1500, showConfirmButton: false});
              if(document.getElementById('panelNilai').style.display !== 'none') {
                document.getElementById('nilai').value = ''; 
                document.getElementById('ket').value = '';
@@ -329,7 +359,7 @@
         })
         .catch(err => { 
           Swal.close();
-          Swal.fire('Error', 'Gagal koneksi ke server', 'error'); 
+          Swal.fire('Error', 'Gagal terhubung ke Google Spreadsheet. Periksa koneksi internet Anda.', 'error'); 
         });
       }
     </script>
