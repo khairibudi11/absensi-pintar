@@ -109,6 +109,14 @@
         font-size: 16px; font-weight: 600; outline: none; box-sizing: border-box;
       }
       .input-fancy:focus { border-color: var(--primary); }
+      
+      /* Tambahkan kode ini untuk membuat tulisan contoh jadi transparan/tipis */
+      .input-fancy::placeholder { 
+        color: #94a3b8; 
+        font-weight: 500;
+        opacity: 0.6; 
+      }
+
       .input-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-grey); font-size: 20px; }
 
       /* --- SWITCHER TABS --- */
@@ -246,16 +254,31 @@
            <div style="display:flex; flex-direction:column; gap:15px;">
              <div>
                <label style="font-size:12px; font-weight:700; color:var(--text-grey); margin-bottom:5px; display:block;">MATA PELAJARAN</label>
-               <input type="text" id="mapel" class="input-fancy" placeholder="Contoh: Matematika" style="padding:12px;">
+               
+               <select id="mapel" class="input-fancy" style="padding:12px; cursor:pointer; background-color:white;">
+                 <option value="" disabled selected hidden>Pilih Mata Pelajaran...</option>
+                 <option value="PAIBP">PAIBP</option>
+                 <option value="Bahasa Indonesia">Bahasa Indonesia</option>
+                 <option value="Matematika">Matematika</option>
+                 <option value="IPAS">IPAS</option>
+                 <option value="Pendidikan Pancasila">Pendidikan Pancasila</option>
+                 <option value="Penjaskes">Penjaskes</option>
+                 <option value="Seni Rupa">Seni Rupa</option>
+                 <option value="Pendidikan Bahasa Banjar">Pendidikan Bahasa Banjar</option>
+                 <option value="Bahasa Inggris">Bahasa Inggris</option>
+                 <option value="Pendidikan Al-Qur'an">Pendidikan Al-Qur'an</option>
+                 <option value="PASS">PASS</option>
+               </select>
+
              </div>
              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
                <div>
                  <label style="font-size:12px; font-weight:700; color:var(--text-grey); margin-bottom:5px; display:block;">NILAI</label>
-                 <input type="number" id="nilai" class="input-fancy" placeholder="0-100" style="padding:12px;">
+                 <input type="number" id="nilai" class="input-fancy" placeholder="0 - 100" style="padding:12px;">
                </div>
                <div>
                  <label style="font-size:12px; font-weight:700; color:var(--text-grey); margin-bottom:5px; display:block;">KETERANGAN</label>
-                 <input type="text" id="ket" class="input-fancy" placeholder="Contoh: Tuntas" style="padding:12px;">
+                 <input type="text" id="ket" class="input-fancy" placeholder="Cth: Tuntas" style="padding:12px;">
                </div>
              </div>
              <button class="btn-save" onclick="prosesNilai()">
