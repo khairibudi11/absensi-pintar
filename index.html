@@ -293,12 +293,22 @@
           scanner = new Html5Qrcode("reader");
           scanner.start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 250, height: 250 } }, 
             (decoded) => {
+              // 1. Bunyikan suara Beep
               new Audio('https://media.geeksforgeeks.org/wp-content/uploads/20190531135120/beep.mp3').play();
+              
+              // 2. Masukkan ID yang ter-scan ke dalam kolom input
               document.getElementById('idSiswa').value = decoded;
-              toggleCamera(); // Matikan setelah scan
-              Swal.fire({ toast: true, position: 'top', icon: 'success', title: 'Scan Berhasil: ' + decoded, showConfirmButton: false, timer: 1500 });
+              
+              // 3. Matikan kamera
+              toggleCamera(); 
+              
+              // 4. LOGIKA BARU: Langsung otomatis proses absen sebagai "Hadir"
+              prosesAbsen('Hadir');
             })
-            .catch(err => { Swal.fire('Error', 'Izin kamera diperlukan atau kamera tidak tersedia', 'error'); toggleCamera(); });
+            .catch(err => { 
+              Swal.fire('Error', 'Izin kamera diperlukan atau kamera tidak tersedia', 'error'); 
+              toggleCamera(); 
+            });
           
           isCamOn = true;
         } else {
