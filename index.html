@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Sistem Sekolah Pintar</title>
     
-    <link rel="icon" href="Logo.png"image/png">
+    <link rel="icon" href="logo.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -32,7 +32,6 @@
         overflow-x: hidden; 
       }
 
-      /* Dekorasi Background */
       .blob {
         position: fixed; width: 300px; height: 300px;
         background: var(--primary); filter: blur(100px); opacity: 0.15;
@@ -41,7 +40,6 @@
       .blob-1 { top: -100px; left: -100px; }
       .blob-2 { bottom: -100px; right: -100px; background: #ec4899; }
 
-      /* --- NAVBAR --- */
       .navbar {
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(10px);
@@ -54,11 +52,10 @@
       .brand-icon { width: 32px; height: 32px; background: var(--primary); color: white; border-radius: 50%; display: grid; place-items: center; }
       .jam-pill { background: #f1f5f9; padding: 6px 12px; border-radius: 20px; font-weight: 600; font-size: 13px; }
 
-      /* --- CONTAINER UTAMA (Mobile First) --- */
       .container {
         padding: 20px;
         display: flex; 
-        flex-direction: column; /* Default HP: Susun ke bawah */
+        flex-direction: column; 
         gap: 20px;
         width: 100%; 
         box-sizing: border-box;
@@ -74,14 +71,13 @@
         box-shadow: 0 4px 20px rgba(0,0,0,0.03);
       }
       
-      /* --- KAMERA AREA --- */
       .camera-box {
         position: relative;
         background: #000;
         border-radius: var(--radius);
         overflow: hidden;
         width: 100%;
-        min-height: 300px; /* Pas di HP */
+        min-height: 300px; 
         display: flex; align-items: center; justify-content: center;
       }
 
@@ -101,7 +97,6 @@
       }
       .btn-cam.stop { background: #ef4444; color: white; position: absolute; bottom: 15px; z-index: 10; display: none; }
 
-      /* --- INPUT ID --- */
       .input-wrapper { position: relative; margin-top: 20px; }
       .input-fancy {
         width: 100%; padding: 14px 14px 14px 44px;
@@ -109,20 +104,10 @@
         font-size: 16px; font-weight: 600; outline: none; box-sizing: border-box;
       }
       .input-fancy:focus { border-color: var(--primary); }
-      
-      /* Tambahkan kode ini untuk membuat tulisan contoh jadi transparan/tipis */
-      .input-fancy::placeholder { 
-        color: #94a3b8; 
-        font-weight: 500;
-        opacity: 0.6; 
-      }
-
+      .input-fancy::placeholder { color: #94a3b8; font-weight: 500; opacity: 0.6; }
       .input-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-grey); font-size: 20px; }
 
-      /* --- SWITCHER TABS --- */
-      .switch-box {
-        background: #f1f5f9; padding: 5px; border-radius: 14px; display: flex; margin-bottom: 20px;
-      }
+      .switch-box { background: #f1f5f9; padding: 5px; border-radius: 14px; display: flex; margin-bottom: 20px; }
       .switch-btn {
         flex: 1; padding: 10px; border: none; background: transparent;
         border-radius: 10px; font-weight: 600; font-size: 14px; color: var(--text-grey);
@@ -130,13 +115,11 @@
       }
       .switch-btn.active { background: white; color: var(--text-dark); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
 
-      /* --- TOMBOL ABSEN --- */
       .grid-absen { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
       .absen-btn {
         border: none; padding: 16px; border-radius: 16px;
         display: flex; flex-direction: column; align-items: center; gap: 6px;
-        cursor: pointer; position: relative;
-        transition: transform 0.1s;
+        cursor: pointer; position: relative; transition: transform 0.1s;
       }
       .absen-btn:active { transform: scale(0.96); }
       .absen-btn h3 { margin: 0; font-size: 14px; font-weight: 800; }
@@ -150,44 +133,20 @@
       .btn-save {
         background: var(--text-dark); color: white; width: 100%;
         padding: 16px; border: none; border-radius: 14px;
-        font-weight: 700; font-size: 16px; margin-top: 15px;
+        font-weight: 700; font-size: 16px; margin-top: 15px; cursor: pointer;
       }
 
-      /* =========================================
-         DESKTOP LAYOUT (PERBAIKAN KUNCI DI SINI) 
-         ========================================= */
+      /* Desktop Layout */
       @media (min-width: 900px) {
         .container { 
-          display: grid; /* MENGUBAH FLEX MENJADI GRID (Bersebelahan) */
-          grid-template-columns: 1fr 1.2fr; /* Membagi dua layar: Kiri 1 bagian (Kamera), Kanan 1.2 bagian (Menu) */
-          align-items: start; 
-          gap: 30px; /* Jarak antar kotak lebih lega */
-          padding: 30px 20px;
+          display: grid; grid-template-columns: 1fr 1.2fr; 
+          align-items: start; gap: 30px; padding: 30px 20px;
         }
-        
-        .navbar { 
-          margin: 20px auto; 
-          border-radius: 100px; 
-          padding: 15px 30px; 
-          max-width: 1160px; /* Lebar maksimal navbar di desktop */
-          top: 20px;
-        }
-
-        .camera-box { 
-          min-height: 400px; /* Kotak kamera otomatis meninggi proporsional di Desktop */
-        } 
-
-        .grid-absen { 
-          gap: 20px; /* Jarak antar tombol absen lebih lebar */
-        }
-
-        .absen-btn {
-          padding: 24px 16px; /* Tombol absen lebih besar dan empuk di klik pakai mouse */
-        }
-
-        .absen-btn i {
-          font-size: 32px; /* Ikon diperbesar di Desktop */
-        }
+        .navbar { margin: 20px auto; border-radius: 100px; padding: 15px 30px; max-width: 1160px; top: 20px; }
+        .camera-box { min-height: 400px; } 
+        .grid-absen { gap: 20px; }
+        .absen-btn { padding: 24px 16px; }
+        .absen-btn i { font-size: 32px; }
       }
     </style>
   </head>
@@ -207,30 +166,58 @@
     <div class="container">
       
       <div class="card">
+        <div style="text-align:center; font-weight:800; font-size:14px; color:var(--primary); margin-bottom:15px;">
+          <i class="ri-qr-scan-2-line"></i> SCAN QR (Otomatis Hadir)
+        </div>
+        <div class="camera-box">
+          <div id="reader" style="display:none;"></div>
+          <div class="cam-overlay" id="camOverlay">
+            <i class="ri-camera-lens-line" style="font-size:48px; opacity:0.5; margin-bottom:10px;"></i>
+            <span style="font-size:14px; opacity:0.8;">Mode Standby</span>
+            <button class="btn-cam" onclick="toggleCamera()" type="button">
+              <i class="ri-play-fill"></i> Buka Kamera
+            </button>
+          </div>
+          <button id="btnStop" class="btn-cam stop" onclick="toggleCamera()" type="button">
+            <i class="ri-stop-circle-fill"></i> Matikan Kamera
+          </button>
+        </div>
+
+        <div class="input-wrapper">
+          <i class="ri-user-search-line input-icon"></i>
+          <input type="text" id="idSiswa" class="input-fancy" placeholder="ID Siswa akan muncul di sini" readonly>
+        </div>
+      </div>
+
+      <div class="card">
         <div class="switch-box">
           <button class="switch-btn active" onclick="gantiTab('absen')" id="btnTabAbsen">Presensi Harian</button>
           <button class="switch-btn" onclick="gantiTab('nilai')" id="btnTabNilai">Input Penilaian</button>
         </div>
 
         <div id="panelAbsen">
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom: 20px;">
-            <div>
-              <label style="font-size:12px; font-weight:700; color:var(--text-grey); margin-bottom:5px; display:block;">KELAS</label>
-              <select id="pilihKelasAbsen" class="input-fancy" onchange="updateDaftarSiswa('pilihKelasAbsen', 'pilihSiswaAbsen')" style="padding:12px; cursor:pointer; background-color:white;">
-                <option value="" disabled selected hidden>Pilih Kelas...</option>
-                <option value="Kelas 1">Kelas 1</option>
-                <option value="Kelas 2">Kelas 2</option>
-                <option value="Kelas 3">Kelas 3</option>
-                <option value="Kelas 4">Kelas 4</option>
-                <option value="Kelas 5">Kelas 5</option>
-                <option value="Kelas 6">Kelas 6</option>
-              </select>
+          
+          <div style="background:#f8fafc; padding:15px; border-radius:14px; border:1px solid #e2e8f0; margin-bottom:20px;">
+            <div style="text-align:center; font-size:11px; font-weight:800; color:#64748b; margin-bottom:10px;">
+              PILIH MANUAL (UNTUK SISWA TIDAK HADIR)
             </div>
-            <div>
-              <label style="font-size:12px; font-weight:700; color:var(--text-grey); margin-bottom:5px; display:block;">NAMA SISWA</label>
-              <select id="pilihSiswaAbsen" class="input-fancy" onchange="setManualAbsen()" style="padding:12px; cursor:pointer; background-color:white;">
-                <option value="" disabled selected hidden>Pilih Siswa...</option>
-              </select>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+              <div>
+                <select id="pilihKelasAbsen" class="input-fancy" onchange="updateDaftarSiswa('pilihKelasAbsen', 'pilihSiswaAbsen')" style="padding:10px; font-size:14px; padding-left:15px; cursor:pointer;">
+                  <option value="" disabled selected hidden>Pilih Kelas...</option>
+                  <option value="Kelas 1">Kelas 1</option>
+                  <option value="Kelas 2">Kelas 2</option>
+                  <option value="Kelas 3">Kelas 3</option>
+                  <option value="Kelas 4">Kelas 4</option>
+                  <option value="Kelas 5">Kelas 5</option>
+                  <option value="Kelas 6">Kelas 6</option>
+                </select>
+              </div>
+              <div>
+                <select id="pilihSiswaAbsen" class="input-fancy" onchange="setManualAbsen()" style="padding:10px; font-size:14px; padding-left:15px; cursor:pointer;">
+                  <option value="" disabled selected hidden>Pilih Siswa...</option>
+                </select>
+              </div>
             </div>
           </div>
 
@@ -252,10 +239,11 @@
 
         <div id="panelNilai" style="display:none;">
            <div style="display:flex; flex-direction:column; gap:15px;">
+             
              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
                <div>
                  <label style="font-size:12px; font-weight:700; color:var(--text-grey); margin-bottom:5px; display:block;">KELAS</label>
-                 <select id="pilihKelasNilai" class="input-fancy" onchange="updateDaftarSiswa('pilihKelasNilai', 'pilihSiswaNilai')" style="padding:12px; cursor:pointer; background-color:white;">
+                 <select id="pilihKelasNilai" class="input-fancy" onchange="updateDaftarSiswa('pilihKelasNilai', 'pilihSiswaNilai')" style="padding:12px; padding-left:15px; cursor:pointer;">
                    <option value="" disabled selected hidden>Pilih Kelas...</option>
                    <option value="Kelas 1">Kelas 1</option>
                    <option value="Kelas 2">Kelas 2</option>
@@ -267,7 +255,7 @@
                </div>
                <div>
                  <label style="font-size:12px; font-weight:700; color:var(--text-grey); margin-bottom:5px; display:block;">NAMA SISWA</label>
-                 <select id="pilihSiswaNilai" class="input-fancy" style="padding:12px; cursor:pointer; background-color:white;">
+                 <select id="pilihSiswaNilai" class="input-fancy" style="padding:12px; padding-left:15px; cursor:pointer;">
                    <option value="" disabled selected hidden>Pilih Siswa...</option>
                  </select>
                </div>
@@ -275,7 +263,7 @@
 
              <div>
                <label style="font-size:12px; font-weight:700; color:var(--text-grey); margin-bottom:5px; display:block;">MATA PELAJARAN</label>
-               <select id="mapel" class="input-fancy" style="padding:12px; cursor:pointer; background-color:white;">
+               <select id="mapel" class="input-fancy" style="padding:12px; padding-left:15px; cursor:pointer;">
                  <option value="" disabled selected hidden>Pilih Mata Pelajaran...</option>
                  <option value="PAIBP">PAIBP</option>
                  <option value="Bahasa Indonesia">Bahasa Indonesia</option>
@@ -294,20 +282,21 @@
              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
                <div>
                  <label style="font-size:12px; font-weight:700; color:var(--text-grey); margin-bottom:5px; display:block;">NILAI</label>
-                 <input type="number" id="nilai" class="input-fancy" placeholder="0 - 100" style="padding:12px;">
+                 <input type="number" id="nilai" class="input-fancy" placeholder="0 - 100" style="padding:12px; padding-left:15px;">
                </div>
                <div>
                  <label style="font-size:12px; font-weight:700; color:var(--text-grey); margin-bottom:5px; display:block;">KETERANGAN</label>
-                 <input type="text" id="ket" class="input-fancy" placeholder="Cth: Tuntas" style="padding:12px;">
+                 <input type="text" id="ket" class="input-fancy" placeholder="Cth: Tuntas" style="padding:12px; padding-left:15px;">
                </div>
              </div>
+             
              <button class="btn-save" onclick="prosesNilai()">
                <i class="ri-save-3-line"></i> Simpan Data Nilai
              </button>
            </div>
         </div>
-      </div>
 
+      </div>
     </div>
 
     <script>
@@ -321,6 +310,9 @@
         document.getElementById('btnTabNilai').className = tab === 'nilai' ? 'switch-btn active' : 'switch-btn';
         document.getElementById('panelAbsen').style.display = tab === 'absen' ? 'block' : 'none';
         document.getElementById('panelNilai').style.display = tab === 'nilai' ? 'block' : 'none';
+        
+        // Bersihkan ID Siswa saat pindah menu agar tidak bingung
+        document.getElementById('idSiswa').value = '';
       }
 
       // ==============================================================
@@ -459,9 +451,10 @@
           { id: "S119", nama: "Nita" },
           { id: "S120", nama: "Nur Khadijah Abna" },
           { id: "S121", nama: "Syifa Hastari" }
+        ]
       };
 
-      // FUNGSI CERDAS: Dipakai ganda untuk tab Absen & tab Nilai
+      // Memunculkan daftar nama sesuai kelas yang dipilih
       function updateDaftarSiswa(idDropdownKelas, idDropdownSiswa) {
         const kelasDipilih = document.getElementById(idDropdownKelas).value;
         const selectSiswa = document.getElementById(idDropdownSiswa);
@@ -475,7 +468,7 @@
         }
       }
 
-      // FUNGSI BARU: Saat nama di tab absen diklik, otomatis mengisi ID ke input sebelah kiri
+      // Mengisi kolom ID Kiri saat guru memilih nama secara manual
       function setManualAbsen() {
         const idTerpilih = document.getElementById('pilihSiswaAbsen').value;
         if(idTerpilih) {
@@ -500,11 +493,14 @@
           scanner.start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 250, height: 250 } }, 
             (decoded) => {
               new Audio('https://media.geeksforgeeks.org/wp-content/uploads/20190531135120/beep.mp3').play();
+              
+              // Masukkan ID hasil scan ke input kiri
               document.getElementById('idSiswa').value = decoded;
               toggleCamera(); 
               
               if (modeTab === 'absen') {
-                prosesAbsen('Hadir'); // Otomatis hadir kalau di tab presensi
+                // Eksekusi absen otomatis Hadir jika di tab presensi
+                prosesAbsen('Hadir'); 
               } else {
                 Swal.fire('Informasi', 'Anda sedang di menu Penilaian. Silakan pilih Kelas dan Nama Siswa dari daftar di kotak sebelah kanan.', 'info');
               }
@@ -536,12 +532,12 @@
         let payload = {};
 
         if(tipe === 'absen') {
-           // Absen membaca dari kolom input kiri (yang sudah otomatis terisi oleh fungsi setManualAbsen atau Scan QR)
+           // Selalu ambil ID dari KOTAK KIRI (bisa terisi karena SCAN, atau karena KLIK MANUAL)
            const id = document.getElementById('idSiswa').value;
-           if(!id) return Swal.fire('Data Kosong', 'Silakan Scan QR atau pilih nama siswa terlebih dahulu', 'warning');
+           if(!id) return Swal.fire('Data Kosong', 'Silakan Scan QR atau pilih nama siswa secara manual!', 'warning');
            payload = { tipe: 'absen', id: id, status: statusAbsen };
         } else {
-           // Nilai mengambil ID langsung dari Dropdown Siswa Nilai
+           // Nilai mengambil ID dari Dropdown Siswa Nilai
            const idSiswaDipilih = document.getElementById('pilihSiswaNilai').value;
            if(!idSiswaDipilih) return Swal.fire('Data Tidak Lengkap', 'Silakan pilih Kelas dan Nama Siswa terlebih dahulu!', 'warning');
 
@@ -566,14 +562,15 @@
           if(res.status === 'success') {
              Swal.fire({icon: 'success', title: 'Berhasil!', text: res.pesan || 'Data telah tersimpan', timer: 1500, showConfirmButton: false});
              
-             // Bersihkan form secara cerdas
+             // Bersihkan form setelah sukses
              if(tipe === 'nilai') {
                document.getElementById('nilai').value = ''; 
                document.getElementById('ket').value = '';
              } else {
-               // Bersihkan input ID dan kembalikan dropdown siswa ke "Pilih Siswa..."
                document.getElementById('idSiswa').value = '';
-               document.getElementById('pilihSiswaAbsen').selectedIndex = 0;
+               // Kembalikan pilihan dropdown manual ke awal
+               document.getElementById('pilihKelasAbsen').selectedIndex = 0;
+               document.getElementById('pilihSiswaAbsen').innerHTML = '<option value="" disabled selected hidden>Pilih Siswa...</option>';
              }
           } else {
              Swal.fire('Gagal', res.pesan, 'error');
