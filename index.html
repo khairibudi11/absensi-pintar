@@ -252,9 +252,30 @@
 
         <div id="panelNilai" style="display:none;">
            <div style="display:flex; flex-direction:column; gap:15px;">
+
+             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+               <div>
+                 <label style="font-size:12px; font-weight:700; color:var(--text-grey); margin-bottom:5px; display:block;">KELAS</label>
+                 <select id="pilihKelas" class="input-fancy" onchange="updateSiswa()" style="padding:12px; cursor:pointer; background-color:white;">
+                   <option value="" disabled selected hidden>Pilih Kelas...</option>
+                   <option value="Kelas 1">Kelas 1</option>
+                   <option value="Kelas 2">Kelas 2</option>
+                   <option value="Kelas 3">Kelas 3</option>
+                   <option value="Kelas 4">Kelas 4</option>
+                   <option value="Kelas 5">Kelas 5</option>
+                   <option value="Kelas 6">Kelas 6</option>
+                 </select>
+               </div>
+               <div>
+                 <label style="font-size:12px; font-weight:700; color:var(--text-grey); margin-bottom:5px; display:block;">NAMA SISWA</label>
+                 <select id="pilihSiswa" class="input-fancy" style="padding:12px; cursor:pointer; background-color:white;">
+                   <option value="" disabled selected hidden>Pilih Siswa...</option>
+                   </select>
+               </div>
+             </div>
+
              <div>
                <label style="font-size:12px; font-weight:700; color:var(--text-grey); margin-bottom:5px; display:block;">MATA PELAJARAN</label>
-               
                <select id="mapel" class="input-fancy" style="padding:12px; cursor:pointer; background-color:white;">
                  <option value="" disabled selected hidden>Pilih Mata Pelajaran...</option>
                  <option value="PAIBP">PAIBP</option>
@@ -269,8 +290,8 @@
                  <option value="Pendidikan Al-Qur'an">Pendidikan Al-Qur'an</option>
                  <option value="PASS">PASS</option>
                </select>
-
              </div>
+
              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
                <div>
                  <label style="font-size:12px; font-weight:700; color:var(--text-grey); margin-bottom:5px; display:block;">NILAI</label>
@@ -282,7 +303,7 @@
                </div>
              </div>
              <button class="btn-save" onclick="prosesNilai()">
-               <i class="ri-save-3-line"></i> Simpan Data
+               <i class="ri-save-3-line"></i> Simpan Data Nilai
              </button>
            </div>
         </div>
@@ -293,11 +314,170 @@
     <script>
       setInterval(() => { document.getElementById('jam').innerText = new Date().toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'}); }, 1000);
 
+      let modeTab = 'absen'; // Variabel untuk mengingat kita sedang buka tab apa
+
       function gantiTab(tab) {
+        modeTab = tab; // Catat tab yang sedang aktif
         document.getElementById('btnTabAbsen').className = tab === 'absen' ? 'switch-btn active' : 'switch-btn';
         document.getElementById('btnTabNilai').className = tab === 'nilai' ? 'switch-btn active' : 'switch-btn';
         document.getElementById('panelAbsen').style.display = tab === 'absen' ? 'block' : 'none';
         document.getElementById('panelNilai').style.display = tab === 'nilai' ? 'block' : 'none';
+      }
+
+      // ==============================================================
+      // DATABASE SISWA (GANTI DENGAN DATA ID & NAMA SISWA ANDA ASLI)
+      // "id" harus sama persis dengan ID di QR Code / Spreadsheet Anda
+      // ==============================================================
+      const databaseSiswa = {
+        "Kelas 1": [
+          { id: "S001", nama: "Ahmad Taupik" },
+          { id: "S002", nama: "Aida Erma" },
+          { id: "S003", nama: "Aisyah" },
+          { id: "S004", nama: "Aqila Azrina" },
+          { id: "S005", nama: "Aqilla Farasya" },
+          { id: "S006", nama: "Asyifa" },
+          { id: "S007", nama: "Aura Azzahra" },
+          { id: "S008", nama: "Muhammad Azka" },
+          { id: "S009", nama: "Muhammad Azmi Ubaidillah" },
+          { id: "S010", nama: "Muhammad Fadillah" },
+          { id: "S011", nama: "Muhammad Hafiz Anshari" },
+          { id: "S012", nama: "Muhammad Nizam Ilmi" },
+          { id: "S013", nama: "Muhammad Rayhan Azizi" },
+          { id: "S014", nama: "Muhammad Renaldi" },
+          { id: "S015", nama: "Muhammad Rifan" },
+          { id: "S016", nama: "Muhammad Rizki Maulana" },
+          { id: "S017", nama: "Muhammad Syarifuddin" },
+          { id: "S018", nama: "Muhammad Syauqan Bachsan" },
+          { id: "S019", nama: "Muslimah" },
+          { id: "S020", nama: "Nina" },
+          { id: "S021", nama: "Nor Khalifah" },
+          { id: "S022", nama: "Ramita Alfa" },
+          { id: "S023", nama: "Riski Aulia" },
+          { id: "S024", nama: "Risma Aulia" },
+          { id: "S025", nama: "Saira Abidah" },
+          { id: "S026", nama: "Syarifatun Nisa" },
+          { id: "S027", nama: "Ziyadatul Hikmah" }
+        ],
+        "Kelas 2": [
+          { id: "S028", nama: "Ahmad Zaki" },
+          { id: "S029", nama: "Alwi Alfattah" },
+          { id: "S030", nama: "Bilqis" },
+          { id: "S031", nama: "Muspita Sari" },
+          { id: "S032", nama: "Nadia" },
+          { id: "S033", nama: "Nizam" },
+          { id: "S034", nama: "Risma Lestari" },
+          { id: "S035", nama: "Siti Aisah" },
+          { id: "S036", nama: "Siti Aisyah" }
+        ],
+        "Kelas 3": [
+          { id: "S037", nama: "Abdan Zaidan Al Gajali" },
+          { id: "S038", nama: "Abdul Latif" },
+          { id: "S039", nama: "Abdur Rauf" },
+          { id: "S040", nama: "Aila Nor Aisya" },
+          { id: "S041", nama: "Azkia Ramadhani" },
+          { id: "S042", nama: "Hayatul" },
+          { id: "S043", nama: "Hilmiyah" },
+          { id: "S044", nama: "Ma'wa" },
+          { id: "S045", nama: "Mahda" },
+          { id: "S046", nama: "Mahfuzah" },
+          { id: "S047", nama: "Maulana" },
+          { id: "S048", nama: "Muhammad Aditiya" },
+          { id: "S049", nama: "Muhammad Arung Al Malik" },
+          { id: "S050", nama: "Muhammad Khalil Zayan" },
+          { id: "S051", nama: "Muhammad Ma'mun" },
+          { id: "S052", nama: "Muhammad Okta Rifai" },
+          { id: "S053", nama: "Muhammad Wildan" },
+          { id: "S054", nama: "Nor Alia" },
+          { id: "S055", nama: "Rahmad" },
+          { id: "S056", nama: "Siti Nafisah" },
+          { id: "S057", nama: "Sri Mulyanti" }
+        ],
+        "Kelas 4": [
+          { id: "S058", nama: "Ahmad Gazali" },
+          { id: "S059", nama: "Ahmad Hakim" },
+          { id: "S060", nama: "Ahmad Jaudi" },
+          { id: "S061", nama: "Aldi Saputra" },
+          { id: "S062", nama: "Alika Puteri" },
+          { id: "S063", nama: "Khairunnisa" },
+          { id: "S064", nama: "Khumairah" },
+          { id: "S065", nama: "Listi Aulia" },
+          { id: "S066", nama: "Maulida" },
+          { id: "S067", nama: "Muhammad Aidil Adha" },
+          { id: "S068", nama: "Muhammad Irsadi" },
+          { id: "S069", nama: "Muhammad Kairul Azmi" },
+          { id: "S070", nama: "Muhammad Sahriza" },
+          { id: "S071", nama: "Muhammad Zainal Ilmi" },
+          { id: "S072", nama: "Nadilah" },
+          { id: "S073", nama: "Ranti" },
+          { id: "S074", nama: "Rizqah" },
+          { id: "S075", nama: "Sa'adah" },
+          { id: "S076", nama: "Siti Zahra" },
+          { id: "S077", nama: "Sri Hayatun Nisa" },
+          { id: "S078", nama: "Syamsul Arifin" },
+          { id: "S079", nama: "Zaifa" }
+        ],
+        "Kelas 5": [
+          { id: "S080", nama: "Ahmad Gaidil Amin" },
+          { id: "S081", nama: "Faudah" },
+          { id: "S082", nama: "Hadijah" },
+          { id: "S083", nama: "Hafiz Harizki" },
+          { id: "S084", nama: "Junaid" },
+          { id: "S085", nama: "Khairunnisa" },
+          { id: "S086", nama: "Mahda" },
+          { id: "S087", nama: "Mahfuz Amin" },
+          { id: "S088", nama: "Mahfuz Hasan" },
+          { id: "S089", nama: "Marpuah" },
+          { id: "S090", nama: "Muhammad Akbar" },
+          { id: "S091", nama: "Muhammad Bayan Akli" },
+          { id: "S092", nama: "Muhammad Fajeri" },
+          { id: "S093", nama: "Muhammad Kahfi" },
+          { id: "S094", nama: "Muhammad Nabil" },
+          { id: "S095", nama: "Muhammad Raihan" },
+          { id: "S096", nama: "Muhammad Rifki Mukhratullah" },
+          { id: "S097", nama: "Muhammad Saiban" },
+          { id: "S098", nama: "Muhammad Zaini" },
+          { id: "S099", nama: "Nor Syifa Zahra" },
+          { id: "S100", nama: "Novaliya" }
+        ],
+        "Kelas 6": [
+          { id: "S101", nama: "Abdurrahim" },
+          { id: "S102", nama: "Ahmad Nor" },
+          { id: "S103", nama: "Alfina Magfirah" },
+          { id: "S104", nama: "Emel" },
+          { id: "S105", nama: "Hafizatul Aulia" },
+          { id: "S106", nama: "Hanifa Atiyah" },
+          { id: "S107", nama: "Hasanati" },
+          { id: "S108", nama: "Husna" },
+          { id: "S109", nama: "Mahdiyatul Asyna" },
+          { id: "S110", nama: "Muhammad Alfian" },
+          { id: "S111", nama: "Muhammad Husien" },
+          { id: "S112", nama: "Muhammad Iqbal" },
+          { id: "S113", nama: "Muhammad Lutfi" },
+          { id: "S114", nama: "Muhammad Nazril" },
+          { id: "S115", nama: "Muhammad Ripa" },
+          { id: "S116", nama: "Muhammad Zaki" },
+          { id: "S117", nama: "Muzdalipah" },
+          { id: "S118", nama: "Nadila" },
+          { id: "S119", nama: "Nita" },
+          { id: "S120", nama: "Nur Khadijah Abna" },
+          { id: "S121", nama: "Syifa Hastari" }
+        ]
+      };
+
+      // Fungsi untuk memunculkan nama siswa sesuai kelas yang dipilih
+      function updateSiswa() {
+        const kelasDipilih = document.getElementById("pilihKelas").value;
+        const selectSiswa = document.getElementById("pilihSiswa");
+        
+        // Bersihkan daftar siswa sebelumnya
+        selectSiswa.innerHTML = '<option value="" disabled selected hidden>Pilih Siswa...</option>';
+
+        // Jika kelas yang dipilih ada di database, masukkan nama-namanya
+        if(databaseSiswa[kelasDipilih]) {
+          databaseSiswa[kelasDipilih].forEach(siswa => {
+            selectSiswa.innerHTML += `<option value="${siswa.id}">${siswa.nama}</option>`;
+          });
+        }
       }
 
       let scanner = null;
@@ -316,17 +496,16 @@
           scanner = new Html5Qrcode("reader");
           scanner.start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 250, height: 250 } }, 
             (decoded) => {
-              // 1. Bunyikan suara Beep
               new Audio('https://media.geeksforgeeks.org/wp-content/uploads/20190531135120/beep.mp3').play();
-              
-              // 2. Masukkan ID yang ter-scan ke dalam kolom input
               document.getElementById('idSiswa').value = decoded;
-              
-              // 3. Matikan kamera
               toggleCamera(); 
               
-              // 4. LOGIKA BARU: Langsung otomatis proses absen sebagai "Hadir"
-              prosesAbsen('Hadir');
+              // LOGIKA BARU: Cek tab apa yang sedang aktif!
+              if (modeTab === 'absen') {
+                prosesAbsen('Hadir');
+              } else {
+                Swal.fire('Informasi', 'Anda sedang di menu Penilaian. Silakan pilih Kelas dan Nama Siswa dari daftar di kotak sebelah kanan.', 'info');
+              }
             })
             .catch(err => { 
               Swal.fire('Error', 'Izin kamera diperlukan atau kamera tidak tersedia', 'error'); 
@@ -351,26 +530,30 @@
       }
 
       function kirimData(tipe, statusAbsen = '') {
-        const id = document.getElementById('idSiswa').value;
-        if(!id) return Swal.fire('ID Kosong', 'Scan QR atau ketik ID Siswa terlebih dahulu', 'warning');
-
-        // URL Google Script Anda
+        // LINK GOOGLE SCRIPT ANDA
         const URL_GOOGLE_SCRIPT = "https://script.google.com/macros/s/AKfycbyZVyv5Kppy2Iu-mRbjzYoaLiGzuVVu5qtkOqHAhXx_qpZEItyHRBam6-cKsbdXcgq0/exec";
-
         let payload = {};
+
         if(tipe === 'absen') {
+           const id = document.getElementById('idSiswa').value;
+           if(!id) return Swal.fire('ID Kosong', 'Scan QR atau ketik ID Siswa terlebih dahulu', 'warning');
            payload = { tipe: 'absen', id: id, status: statusAbsen };
         } else {
+           // Untuk Nilai, kita ambil ID dari Dropdown Pilihan Siswa, bukan dari kamera!
+           const idSiswaDipilih = document.getElementById('pilihSiswa').value;
+           if(!idSiswaDipilih) return Swal.fire('Data Tidak Lengkap', 'Silakan pilih Kelas dan Nama Siswa terlebih dahulu!', 'warning');
+
            const mp = document.getElementById('mapel').value;
            const nl = document.getElementById('nilai').value;
            const kt = document.getElementById('ket').value || '-';
+           
            if(!mp || !nl) return Swal.fire('Lengkapi Data', 'Mata Pelajaran dan Nilai wajib diisi', 'warning');
-           payload = { tipe: 'nilai', id: id, mapel: mp, ket: kt, nilai: nl };
+           
+           payload = { tipe: 'nilai', id: idSiswaDipilih, mapel: mp, ket: kt, nilai: nl };
         }
 
         Swal.fire({title: 'Menyimpan Data...', allowOutsideClick: false, didOpen: () => Swal.showLoading()});
         
-        // Mengirim data ke Google Script
         fetch(URL_GOOGLE_SCRIPT, {
           method: 'POST',
           body: JSON.stringify(payload)
@@ -380,7 +563,8 @@
           Swal.close();
           if(res.status === 'success') {
              Swal.fire({icon: 'success', title: 'Berhasil!', text: res.pesan || 'Data telah tersimpan', timer: 1500, showConfirmButton: false});
-             if(document.getElementById('panelNilai').style.display !== 'none') {
+             if(tipe === 'nilai') {
+               // Hanya mereset kolom nilai dan ket setelah tersimpan (Agar mapel & nama tetap, memudahkan input beruntun)
                document.getElementById('nilai').value = ''; 
                document.getElementById('ket').value = '';
              } else {
