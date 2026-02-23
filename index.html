@@ -207,33 +207,33 @@
     <div class="container">
       
       <div class="card">
-        <div class="camera-box">
-          <div id="reader" style="display:none;"></div>
-          <div class="cam-overlay" id="camOverlay">
-            <i class="ri-camera-lens-line" style="font-size:48px; opacity:0.5; margin-bottom:10px;"></i>
-            <span style="font-size:14px; opacity:0.8;">Mode Standby</span>
-            <button class="btn-cam" onclick="toggleCamera()" type="button">
-              <i class="ri-play-fill"></i> Buka Kamera
-            </button>
-          </div>
-          <button id="btnStop" class="btn-cam stop" onclick="toggleCamera()" type="button">
-            <i class="ri-stop-circle-fill"></i> Matikan Kamera
-          </button>
-        </div>
-
-        <div class="input-wrapper">
-          <i class="ri-qr-scan-2-line input-icon"></i>
-          <input type="text" id="idSiswa" class="input-fancy" placeholder="Scan QR / Ketik ID">
-        </div>
-      </div>
-
-      <div class="card">
         <div class="switch-box">
           <button class="switch-btn active" onclick="gantiTab('absen')" id="btnTabAbsen">Presensi Harian</button>
           <button class="switch-btn" onclick="gantiTab('nilai')" id="btnTabNilai">Input Penilaian</button>
         </div>
 
         <div id="panelAbsen">
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom: 20px;">
+            <div>
+              <label style="font-size:12px; font-weight:700; color:var(--text-grey); margin-bottom:5px; display:block;">KELAS</label>
+              <select id="pilihKelasAbsen" class="input-fancy" onchange="updateDaftarSiswa('pilihKelasAbsen', 'pilihSiswaAbsen')" style="padding:12px; cursor:pointer; background-color:white;">
+                <option value="" disabled selected hidden>Pilih Kelas...</option>
+                <option value="Kelas 1">Kelas 1</option>
+                <option value="Kelas 2">Kelas 2</option>
+                <option value="Kelas 3">Kelas 3</option>
+                <option value="Kelas 4">Kelas 4</option>
+                <option value="Kelas 5">Kelas 5</option>
+                <option value="Kelas 6">Kelas 6</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:12px; font-weight:700; color:var(--text-grey); margin-bottom:5px; display:block;">NAMA SISWA</label>
+              <select id="pilihSiswaAbsen" class="input-fancy" onchange="setManualAbsen()" style="padding:12px; cursor:pointer; background-color:white;">
+                <option value="" disabled selected hidden>Pilih Siswa...</option>
+              </select>
+            </div>
+          </div>
+
           <div class="grid-absen">
             <button class="absen-btn btn-hadir" onclick="prosesAbsen('Hadir')">
               <i class="ri-checkbox-circle-fill"></i> <h3>HADIR</h3>
@@ -252,11 +252,10 @@
 
         <div id="panelNilai" style="display:none;">
            <div style="display:flex; flex-direction:column; gap:15px;">
-
              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
                <div>
                  <label style="font-size:12px; font-weight:700; color:var(--text-grey); margin-bottom:5px; display:block;">KELAS</label>
-                 <select id="pilihKelas" class="input-fancy" onchange="updateSiswa()" style="padding:12px; cursor:pointer; background-color:white;">
+                 <select id="pilihKelasNilai" class="input-fancy" onchange="updateDaftarSiswa('pilihKelasNilai', 'pilihSiswaNilai')" style="padding:12px; cursor:pointer; background-color:white;">
                    <option value="" disabled selected hidden>Pilih Kelas...</option>
                    <option value="Kelas 1">Kelas 1</option>
                    <option value="Kelas 2">Kelas 2</option>
@@ -268,9 +267,9 @@
                </div>
                <div>
                  <label style="font-size:12px; font-weight:700; color:var(--text-grey); margin-bottom:5px; display:block;">NAMA SISWA</label>
-                 <select id="pilihSiswa" class="input-fancy" style="padding:12px; cursor:pointer; background-color:white;">
+                 <select id="pilihSiswaNilai" class="input-fancy" style="padding:12px; cursor:pointer; background-color:white;">
                    <option value="" disabled selected hidden>Pilih Siswa...</option>
-                   </select>
+                 </select>
                </div>
              </div>
 
@@ -314,10 +313,10 @@
     <script>
       setInterval(() => { document.getElementById('jam').innerText = new Date().toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'}); }, 1000);
 
-      let modeTab = 'absen'; // Variabel untuk mengingat kita sedang buka tab apa
+      let modeTab = 'absen'; 
 
       function gantiTab(tab) {
-        modeTab = tab; // Catat tab yang sedang aktif
+        modeTab = tab; 
         document.getElementById('btnTabAbsen').className = tab === 'absen' ? 'switch-btn active' : 'switch-btn';
         document.getElementById('btnTabNilai').className = tab === 'nilai' ? 'switch-btn active' : 'switch-btn';
         document.getElementById('panelAbsen').style.display = tab === 'absen' ? 'block' : 'none';
@@ -325,8 +324,7 @@
       }
 
       // ==============================================================
-      // DATABASE SISWA (GANTI DENGAN DATA ID & NAMA SISWA ANDA ASLI)
-      // "id" harus sama persis dengan ID di QR Code / Spreadsheet Anda
+      // DATABASE SISWA (Isi dengan data siswa asli Anda)
       // ==============================================================
       const databaseSiswa = {
         "Kelas 1": [
@@ -461,22 +459,27 @@
           { id: "S119", nama: "Nita" },
           { id: "S120", nama: "Nur Khadijah Abna" },
           { id: "S121", nama: "Syifa Hastari" }
-        ]
       };
 
-      // Fungsi untuk memunculkan nama siswa sesuai kelas yang dipilih
-      function updateSiswa() {
-        const kelasDipilih = document.getElementById("pilihKelas").value;
-        const selectSiswa = document.getElementById("pilihSiswa");
+      // FUNGSI CERDAS: Dipakai ganda untuk tab Absen & tab Nilai
+      function updateDaftarSiswa(idDropdownKelas, idDropdownSiswa) {
+        const kelasDipilih = document.getElementById(idDropdownKelas).value;
+        const selectSiswa = document.getElementById(idDropdownSiswa);
         
-        // Bersihkan daftar siswa sebelumnya
         selectSiswa.innerHTML = '<option value="" disabled selected hidden>Pilih Siswa...</option>';
 
-        // Jika kelas yang dipilih ada di database, masukkan nama-namanya
         if(databaseSiswa[kelasDipilih]) {
           databaseSiswa[kelasDipilih].forEach(siswa => {
             selectSiswa.innerHTML += `<option value="${siswa.id}">${siswa.nama}</option>`;
           });
+        }
+      }
+
+      // FUNGSI BARU: Saat nama di tab absen diklik, otomatis mengisi ID ke input sebelah kiri
+      function setManualAbsen() {
+        const idTerpilih = document.getElementById('pilihSiswaAbsen').value;
+        if(idTerpilih) {
+          document.getElementById('idSiswa').value = idTerpilih;
         }
       }
 
@@ -500,9 +503,8 @@
               document.getElementById('idSiswa').value = decoded;
               toggleCamera(); 
               
-              // LOGIKA BARU: Cek tab apa yang sedang aktif!
               if (modeTab === 'absen') {
-                prosesAbsen('Hadir');
+                prosesAbsen('Hadir'); // Otomatis hadir kalau di tab presensi
               } else {
                 Swal.fire('Informasi', 'Anda sedang di menu Penilaian. Silakan pilih Kelas dan Nama Siswa dari daftar di kotak sebelah kanan.', 'info');
               }
@@ -530,17 +532,17 @@
       }
 
       function kirimData(tipe, statusAbsen = '') {
-        // LINK GOOGLE SCRIPT ANDA
         const URL_GOOGLE_SCRIPT = "https://script.google.com/macros/s/AKfycbyZVyv5Kppy2Iu-mRbjzYoaLiGzuVVu5qtkOqHAhXx_qpZEItyHRBam6-cKsbdXcgq0/exec";
         let payload = {};
 
         if(tipe === 'absen') {
+           // Absen membaca dari kolom input kiri (yang sudah otomatis terisi oleh fungsi setManualAbsen atau Scan QR)
            const id = document.getElementById('idSiswa').value;
-           if(!id) return Swal.fire('ID Kosong', 'Scan QR atau ketik ID Siswa terlebih dahulu', 'warning');
+           if(!id) return Swal.fire('Data Kosong', 'Silakan Scan QR atau pilih nama siswa terlebih dahulu', 'warning');
            payload = { tipe: 'absen', id: id, status: statusAbsen };
         } else {
-           // Untuk Nilai, kita ambil ID dari Dropdown Pilihan Siswa, bukan dari kamera!
-           const idSiswaDipilih = document.getElementById('pilihSiswa').value;
+           // Nilai mengambil ID langsung dari Dropdown Siswa Nilai
+           const idSiswaDipilih = document.getElementById('pilihSiswaNilai').value;
            if(!idSiswaDipilih) return Swal.fire('Data Tidak Lengkap', 'Silakan pilih Kelas dan Nama Siswa terlebih dahulu!', 'warning');
 
            const mp = document.getElementById('mapel').value;
@@ -563,12 +565,15 @@
           Swal.close();
           if(res.status === 'success') {
              Swal.fire({icon: 'success', title: 'Berhasil!', text: res.pesan || 'Data telah tersimpan', timer: 1500, showConfirmButton: false});
+             
+             // Bersihkan form secara cerdas
              if(tipe === 'nilai') {
-               // Hanya mereset kolom nilai dan ket setelah tersimpan (Agar mapel & nama tetap, memudahkan input beruntun)
                document.getElementById('nilai').value = ''; 
                document.getElementById('ket').value = '';
              } else {
+               // Bersihkan input ID dan kembalikan dropdown siswa ke "Pilih Siswa..."
                document.getElementById('idSiswa').value = '';
+               document.getElementById('pilihSiswaAbsen').selectedIndex = 0;
              }
           } else {
              Swal.fire('Gagal', res.pesan, 'error');
